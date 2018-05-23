@@ -1,0 +1,95 @@
+# Import the pygame library
+import pygame
+import os
+
+# Initialize the game engine
+pygame.init()
+
+# Colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+
+# Dimensions
+dimensions = (700, 500)
+screen = pygame.display.set_mode(dimensions)
+
+# Window title
+pygame.display.set_caption("Kath learning pygame")
+
+# Iterate until the user clicks on the close button.
+close_window = False
+
+# It is used to manage how quickly the screen is updated
+clock = pygame.time.Clock()
+
+# ---------- Main Loop of the Program ----------
+while not close_window:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            close_window = True
+
+    # Cleare the screen
+    screen.fill(WHITE)
+
+    point_x_1 = [0, 0]
+    point_x_2 = [0, 100]
+    point_x_3 = [100, 100]
+    point_x_4 = [100, 0]
+
+    point_y_1 = [0, 110]
+    point_y_2 = [0, 210]
+    point_y_3 = [100, 210]
+    point_y_4 = [100, 110]
+
+    load_image = pygame.image.load('dog.jpg')
+
+    point_list = []
+
+    # Draw the frid
+    for point in range(4):
+        # Resize the image
+        image = pygame.transform.scale(load_image, (100, 100))
+
+        # X - box
+        points = [
+            [point_x_1[0] + (point * 110), point_x_1[1]],
+            [point_x_2[0] + (point * 110), point_x_2[1]],
+            [point_x_3[0] + (point * 110), point_x_3[1]],
+            [point_x_4[0] + (point * 110), point_x_4[1]]
+        ]
+        pygame.draw.polygon(screen, BLACK, points, 1)
+
+
+        # Set the image in the box in the X
+        rect_x = image.get_rect()
+        rect_x = rect_x.move((point_x_1[0]+(point*110), point_x_1[1]))
+        # Build and print
+        #screen.blit(image, rect_x)
+
+        # Y - box
+        pygame.draw.polygon(screen, BLACK, [[point_y_1[0] + (point * 110), point_y_1[1]],
+                                            [point_y_2[0] + (point * 110), point_y_2[1]],
+                                            [point_y_3[0] + (point * 110), point_y_3[1]],
+                                            [point_y_4[0] + (point * 110), point_y_4[1]]], 1)
+
+        # Set the image in the box in the Y
+        rect_y = image.get_rect()
+        rect_y = rect_y.move((point_y_1[0] + (point * 110), point_y_1[1]))
+        # Build and print
+        #screen.blit(image, rect_y)
+
+    if event.type == pygame.MOUSEBUTTONUP:
+        #rect_y = rect_y.move((point_y_1[0] + (point * 110), point_y_1[1]))
+        # screen.blit(image, rect_y)
+        print(pygame.mouse.get_pos())
+
+    # Update the screen
+    pygame.display.flip()
+
+    # Limited to 20 frames per second
+    clock.tick(20)
+
+# Close the program
+pygame.quit()
