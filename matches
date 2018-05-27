@@ -24,6 +24,33 @@ close_window = False
 # It is used to manage how quickly the screen is updated
 clock = pygame.time.Clock()
 
+# Select the font and size
+font = pygame.font.Font(None, 25)
+
+point_x_1 = [0, 0]
+point_x_2 = [0, 100]
+point_x_3 = [100, 100]
+point_x_4 = [100, 0]
+
+point_y_1 = [0, 110]
+point_y_2 = [0, 210]
+point_y_3 = [100, 210]
+point_y_4 = [100, 110]
+
+itemsList = [
+    {'id': 1, 'type': 'dog', 'position': [0, 0], 'range': [[0, 100], [0, 100]], 'show': False, 'image': 'dog.jpg'},
+    {'id': 2, 'type': 'cat', 'position': [110, 0], 'range': [[110, 210], [0, 100]], 'show': False, 'image': 'cat.jpg'},
+    {'id': 3, 'type': 'dog', 'position': [220, 0], 'range': [[220, 320], [0, 100]], 'show': False, 'image': 'dog.jpg'},
+    {'id': 4, 'type': 'cat', 'position': [330, 0], 'range': [[330, 430], [0, 100]], 'show': False, 'image': 'cat.jpg'},
+    {'id': 5, 'type': 'birt', 'position': [0, 110], 'range': [[0, 100], [110, 210]], 'show': False, 'image': 'birt.jpg'},
+    {'id': 6, 'type': 'horse', 'position': [110, 110], 'range': [[110, 210], [110, 210]], 'show': False, 'image': 'horse.jpg'},
+    {'id': 7, 'type': 'birt', 'position': [220, 110], 'range': [[210, 320], [110, 210]], 'show': False, 'image': 'birt.jpg'},
+    {'id': 8, 'type': 'horse', 'position': [330, 110], 'range': [[330, 420], [110, 210]], 'show': False, 'image': 'horse.jpg'}
+]
+
+point_list = []
+compare_list = []
+
 # ---------- Main Loop of the Program ----------
 while not close_window:
     for event in pygame.event.get():
@@ -33,63 +60,64 @@ while not close_window:
     # Cleare the screen
     screen.fill(WHITE)
 
-    point_x_1 = [0, 0]
-    point_x_2 = [0, 100]
-    point_x_3 = [100, 100]
-    point_x_4 = [100, 0]
-
-    point_y_1 = [0, 110]
-    point_y_2 = [0, 210]
-    point_y_3 = [100, 210]
-    point_y_4 = [100, 110]
-
-    load_image = pygame.image.load('dog.jpg')
-
-    point_list = []
-
-    # Draw the frid
+    # Draw the grid
     for point in range(4):
-        # Resize the image
-        image = pygame.transform.scale(load_image, (100, 100))
 
         # X - box
-        points = [
+        points_x = [
             [point_x_1[0] + (point * 110), point_x_1[1]],
             [point_x_2[0] + (point * 110), point_x_2[1]],
             [point_x_3[0] + (point * 110), point_x_3[1]],
             [point_x_4[0] + (point * 110), point_x_4[1]]
         ]
-        pygame.draw.polygon(screen, BLACK, points, 1)
-
-
-        # Set the image in the box in the X
-        rect_x = image.get_rect()
-        rect_x = rect_x.move((point_x_1[0]+(point*110), point_x_1[1]))
-        # Build and print
-        #screen.blit(image, rect_x)
+        pygame.draw.polygon(screen, BLACK, points_x, 1)
 
         # Y - box
-        pygame.draw.polygon(screen, BLACK, [[point_y_1[0] + (point * 110), point_y_1[1]],
-                                            [point_y_2[0] + (point * 110), point_y_2[1]],
-                                            [point_y_3[0] + (point * 110), point_y_3[1]],
-                                            [point_y_4[0] + (point * 110), point_y_4[1]]], 1)
 
-        # Set the image in the box in the Y
-        rect_y = image.get_rect()
-        rect_y = rect_y.move((point_y_1[0] + (point * 110), point_y_1[1]))
-        # Build and print
-        #screen.blit(image, rect_y)
+        points_y = [
+            [point_y_1[0] + (point * 110), point_y_1[1]],
+            [point_y_2[0] + (point * 110), point_y_2[1]],
+            [point_y_3[0] + (point * 110), point_y_3[1]],
+            [point_y_4[0] + (point * 110), point_y_4[1]]
+        ]
 
-    if event.type == pygame.MOUSEBUTTONUP:
-        #rect_y = rect_y.move((point_y_1[0] + (point * 110), point_y_1[1]))
-        # screen.blit(image, rect_y)
-        print(pygame.mouse.get_pos())
+        pygame.draw.polygon(screen, BLACK, points_y, 1)
+
+    x = []
+    y = []
+
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        position_clicked = pygame.mouse.get_pos()
+        x = position_clicked[0]
+        y = position_clicked[1]
+
+        for it in itemsList:
+            # Get the box position
+            if (it.get('range')[0][0] <= x <= it.get('range')[0][1]) and (it.get('range')[1][0] <= y <= it.get('range')[1][1]):
+                # Draw the image
+                # Resize the image
+                load_image = pygame.image.load(it.get('image'))
+                image = pygame.transform.scale(load_image, (100, 100))
+                rect_y = image.get_rect()
+                rect_y = rect_y.move(it.get('position')[0], it.get('position')[1])
+                screen.blit(image, rect_y)
+                # Save in the compare list
+
+                compare_list.append({'type': it.get('type'), 'id': it.get('id')})
+                #import ipdb; ipdb.set_trace()
+                if len(compare_list) == 2:
+                    if compare_list[0].get('type') == compare_list[1].get('type'):
+                        if compare_list[0].get('id') != compare_list[1].get('id'):
+                            text = font.render("This is a match", True, RED)
+                            screen.blit(text, [300, 300])
+                            print("match")
+                    compare_list = []
+
 
     # Update the screen
     pygame.display.flip()
 
     # Limited to 20 frames per second
     clock.tick(20)
-
 # Close the program
 pygame.quit()
