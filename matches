@@ -165,17 +165,27 @@ while not close_window:
                 compare_list.append({'type': it.get('type'), 'id': it.get('id')})
                 it['show'] = True
 
-                if len(compare_list) == 2:
+                if len(compare_list) == 3:
+
                     if compare_list[0].get('type') == compare_list[1].get('type'):
                         if compare_list[0].get('id') != compare_list[1].get('id'):
+                            # Add the text with the match
                             text = font.render("This is a match", True, RED)
                             screen.blit(text, [400, 400])
-                            print("match")
+                            # Adding the match for the list of matches
                             matches_list.append({'type': it.get('type'), 'id': it.get('id')})
+                            # Hide the last
+                            it['show'] = False
+                            # Reset the list
+                            compare_list = []
                     else:
+                        # Hide the last
                         it['show'] = False
-                        itemsList[compare_list[0].get('id')-1]['show'] = False
-                    compare_list = []
+                        # Hide the second item
+                        itemsList[compare_list[1].get('id') - 1]['show'] = False
+                        # Remove the last two items
+                        del compare_list[2]
+                        del compare_list[1]
 
         print compare_list
 
