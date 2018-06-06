@@ -3,6 +3,7 @@
 # Import the pygame library
 import pygame
 import os
+import random
 
 # Initialize the game engine
 pygame.init()
@@ -61,8 +62,18 @@ while not close_window:
         if event.type == pygame.QUIT:
             close_window = True
 
+    # Reset the game
+    key_press = pygame.key.get_pressed()
+    if key_press[pygame.K_c]:
+        compare_list = []
+        matches_list = []
+        random.shuffle(itemsList)
+
     # Cleare the screen
     screen.fill(WHITE)
+
+    reset = font.render("Reinicia con la tecla C", True, RED)
+    screen.blit(reset, [500, 480])
 
     score = font.render('Número de parejas:', True, BLACK)
     text = font.render(str(len(matches_list)), True, BLUE)
