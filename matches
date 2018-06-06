@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Import the pygame library
 import pygame
 import os
@@ -8,15 +10,16 @@ pygame.init()
 # Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
+GREEN = (102, 255, 204)
+RED = (255, 80, 80)
+BLUE = (0, 153, 255)
 
 # Dimensions
 dimensions = (700, 500)
 screen = pygame.display.set_mode(dimensions)
 
 # Window title
-pygame.display.set_caption("Kath learning pygame")
+pygame.display.set_caption("Comprendiendo las estructuras algorístmicas")
 
 # Iterate until the user clicks on the close button.
 close_window = False
@@ -27,29 +30,30 @@ clock = pygame.time.Clock()
 # Select the font and size
 font = pygame.font.Font(None, 25)
 
-point_x_1 = [0, 0]
-point_x_2 = [0, 100]
-point_x_3 = [100, 100]
-point_x_4 = [100, 0]
+point_x_1 = [20, 20]
+point_x_2 = [20, 120]
+point_x_3 = [120, 120]
+point_x_4 = [120, 20]
 
-point_y_1 = [0, 110]
-point_y_2 = [0, 210]
-point_y_3 = [100, 210]
-point_y_4 = [100, 110]
+point_y_1 = [20, 120]
+point_y_2 = [20, 220]
+point_y_3 = [120, 220]
+point_y_4 = [120, 120]
 
 itemsList = [
-    {'id': 1, 'type': 'dog', 'position': [0, 0], 'range': [[0, 100], [0, 100]], 'show': False, 'image': 'dog.jpg'},
-    {'id': 2, 'type': 'cat', 'position': [110, 0], 'range': [[110, 210], [0, 100]], 'show': False, 'image': 'cat.jpg'},
-    {'id': 3, 'type': 'dog', 'position': [220, 0], 'range': [[220, 320], [0, 100]], 'show': False, 'image': 'dog.jpg'},
-    {'id': 4, 'type': 'cat', 'position': [330, 0], 'range': [[330, 430], [0, 100]], 'show': False, 'image': 'cat.jpg'},
-    {'id': 5, 'type': 'birt', 'position': [0, 110], 'range': [[0, 100], [110, 210]], 'show': False, 'image': 'birt.jpg'},
-    {'id': 6, 'type': 'horse', 'position': [110, 110], 'range': [[110, 210], [110, 210]], 'show': False, 'image': 'horse.jpg'},
-    {'id': 7, 'type': 'birt', 'position': [220, 110], 'range': [[210, 320], [110, 210]], 'show': False, 'image': 'birt.jpg'},
-    {'id': 8, 'type': 'horse', 'position': [330, 110], 'range': [[330, 420], [110, 210]], 'show': False, 'image': 'horse.jpg'}
+    {'id': 1, 'type': 'dog', 'position': [20, 20], 'range': [[20, 120], [20, 120]], 'show': False, 'image': 'dog.jpg'},
+    {'id': 2, 'type': 'cat', 'position': [120, 20], 'range': [[120, 220], [20, 120]], 'show': False, 'image': 'cat.jpg'},
+    {'id': 3, 'type': 'dog', 'position': [220, 20], 'range': [[220, 320], [20, 120]], 'show': False, 'image': 'dog.jpg'},
+    {'id': 4, 'type': 'cat', 'position': [320, 20], 'range': [[320, 420], [20, 120]], 'show': False, 'image': 'cat.jpg'},
+    {'id': 5, 'type': 'birt', 'position': [20, 120], 'range': [[20, 120], [120, 220]], 'show': False, 'image': 'birt.jpg'},
+    {'id': 6, 'type': 'horse', 'position': [120, 120], 'range': [[120, 220], [120, 220]], 'show': False, 'image': 'horse.jpg'},
+    {'id': 7, 'type': 'birt', 'position': [220, 120], 'range': [[220, 320], [120, 220]], 'show': False, 'image': 'birt.jpg'},
+    {'id': 8, 'type': 'horse', 'position': [320, 120], 'range': [[320, 420], [120, 220]], 'show': False, 'image': 'horse.jpg'}
 ]
 
-point_list = []
+matches_list = []
 compare_list = []
+newvariable = False
 
 # ---------- Main Loop of the Program ----------
 while not close_window:
@@ -60,25 +64,82 @@ while not close_window:
     # Cleare the screen
     screen.fill(WHITE)
 
+    score = font.render('Número de parejas:', True, BLACK)
+    text = font.render(str(len(matches_list)), True, BLUE)
+    screen.blit(text, [650, 100])
+    screen.blit(score, [430, 100])
+
+    score = font.render("0", True, BLACK)
+    screen.blit(score, [3, 60])
+
+    score = font.render("1", True, BLACK)
+    screen.blit(score, [3, 160])
+
+    score = font.render("0", True, BLACK)
+    screen.blit(score, [60, 3])
+
+    score = font.render("1", True, BLACK)
+    screen.blit(score, [160, 3])
+
+    score = font.render("2", True, BLACK)
+    screen.blit(score, [260, 3])
+
+    score = font.render("3", True, BLACK)
+    screen.blit(score, [360, 3])
+
+    score = font.render("Si (", True, BLUE)
+    screen.blit(score, [60, 300])
+
+    if len(compare_list) >= 1:
+        score = font.render(compare_list[0].get('type'), True, GREEN)
+        screen.blit(score, [100, 300])
+
+    score = font.render(" es igual a ", True, BLACK)
+    screen.blit(score, [160, 300])
+
+    if len(compare_list) >= 2:
+        score = font.render(compare_list[1].get('type'), True, GREEN)
+        screen.blit(score, [260, 300])
+
+    score = font.render(") entonces", True, BLUE)
+    screen.blit(score, [330, 300])
+
+    for item in itemsList:
+        if item.get('show'):
+            load_image = pygame.image.load(item.get('image'))
+            image = pygame.transform.scale(load_image, (100, 100))
+            rect_y = image.get_rect()
+            rect_y = rect_y.move(item.get('position')[0], item.get('position')[1])
+            screen.blit(image, rect_y)
+
+    score = font.render("Tienes una pareja", True, BLACK)
+    screen.blit(score, [100, 350])
+
+    score = font.render("Si no", True, BLUE)
+    screen.blit(score, [60, 400])
+
+    score = font.render("No son pareja", True, BLACK)
+    screen.blit(score, [100, 450])
+
     # Draw the grid
     for point in range(4):
-
+        score = font.render(str(point), True, BLACK)
         # X - box
         points_x = [
-            [point_x_1[0] + (point * 110), point_x_1[1]],
-            [point_x_2[0] + (point * 110), point_x_2[1]],
-            [point_x_3[0] + (point * 110), point_x_3[1]],
-            [point_x_4[0] + (point * 110), point_x_4[1]]
+            [point_x_1[0] + (point * 100), point_x_1[1]],
+            [point_x_2[0] + (point * 100), point_x_2[1]],
+            [point_x_3[0] + (point * 100), point_x_3[1]],
+            [point_x_4[0] + (point * 100), point_x_4[1]]
         ]
         pygame.draw.polygon(screen, BLACK, points_x, 1)
 
         # Y - box
 
         points_y = [
-            [point_y_1[0] + (point * 110), point_y_1[1]],
-            [point_y_2[0] + (point * 110), point_y_2[1]],
-            [point_y_3[0] + (point * 110), point_y_3[1]],
-            [point_y_4[0] + (point * 110), point_y_4[1]]
+            [point_y_1[0] + (point * 100), point_y_1[1]],
+            [point_y_2[0] + (point * 100), point_y_2[1]],
+            [point_y_3[0] + (point * 100), point_y_3[1]],
+            [point_y_4[0] + (point * 100), point_y_4[1]]
         ]
 
         pygame.draw.polygon(screen, BLACK, points_y, 1)
@@ -86,7 +147,14 @@ while not close_window:
     x = []
     y = []
 
-    if event.type == pygame.MOUSEBUTTONDOWN:
+    # Botton not pressed
+    if event.type == pygame.MOUSEBUTTONUP and newvariable:
+        newvariable = False
+
+    # Botton pressed
+    if event.type == pygame.MOUSEBUTTONDOWN and not newvariable:
+        newvariable = True
+
         position_clicked = pygame.mouse.get_pos()
         x = position_clicked[0]
         y = position_clicked[1]
@@ -94,30 +162,28 @@ while not close_window:
         for it in itemsList:
             # Get the box position
             if (it.get('range')[0][0] <= x <= it.get('range')[0][1]) and (it.get('range')[1][0] <= y <= it.get('range')[1][1]):
-                # Draw the image
-                # Resize the image
-                load_image = pygame.image.load(it.get('image'))
-                image = pygame.transform.scale(load_image, (100, 100))
-                rect_y = image.get_rect()
-                rect_y = rect_y.move(it.get('position')[0], it.get('position')[1])
-                screen.blit(image, rect_y)
-                # Save in the compare list
-
                 compare_list.append({'type': it.get('type'), 'id': it.get('id')})
-                #import ipdb; ipdb.set_trace()
+                it['show'] = True
+
                 if len(compare_list) == 2:
                     if compare_list[0].get('type') == compare_list[1].get('type'):
                         if compare_list[0].get('id') != compare_list[1].get('id'):
                             text = font.render("This is a match", True, RED)
-                            screen.blit(text, [300, 300])
+                            screen.blit(text, [400, 400])
                             print("match")
+                            matches_list.append({'type': it.get('type'), 'id': it.get('id')})
+                    else:
+                        it['show'] = False
+                        itemsList[compare_list[0].get('id')-1]['show'] = False
                     compare_list = []
 
+        print compare_list
 
     # Update the screen
     pygame.display.flip()
 
-    # Limited to 20 frames per second
-    clock.tick(20)
+    # Limited to 15 frames per second
+    clock.tick(15)
 # Close the program
 pygame.quit()
+''
